@@ -42,8 +42,7 @@ $old = $old_input ?? [];
                     <label for="confirm_password">Подтвердите пароль *</label>
                     <input type="password" id="confirm_password" name="confirm_password" required>
                     
-                    <label for="phone">Телефон</label>
-                    <input type="tel" id="phone" name="phone" value="<?= $old['phone'] ?? '' ?>">
+                  
                     
                     <label>Пол *</label>
                     <select name="gender" required>
