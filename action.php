@@ -1,5 +1,7 @@
 <?php
-// Проверяем, что форма отправлена методом POST
+// action.php
+
+// Проверяем метод запроса
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: index.php');
     exit;
@@ -10,108 +12,66 @@ function sanitize($data) {
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
-// Собираем ошибки
 $errors = [];
+$old_input = $_POST; // Сохраняем введенные данные, чтобы вернуть их в форму
 
-// Валидация email
-if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+// --- ВАЛИДАЦИЯ ---
+
+// 1. Проверка Email
+if (empty($old_input['email']) || !filter_var($old_input['email'], FILTER_VALIDATE_EMAIL)) {
     $errors[] = 'Пожалуйста, введите корректный email адрес.';
 }
 
-// Валидация пароля
-if (empty($_POST['password']) || strlen($_POST['password']) < 6) {
+// 2. Проверка Пароля (самое важное для вашего задания)
+if (empty($old_input['password'])) {
+    $errors[] = 'Пароль не может быть пустым.';
+} elseif (strlen($old_input['password']) < 6) {
     $errors[] = 'Пароль должен содержать минимум 6 символов.';
 }
 
-// Проверка совпадения паролей
-if ($_POST['password'] !== $_POST['confirm_password']) {
-    $errors[] = 'Пароли не совпадают.';
+// 3. Совпадение паролей
+if (!empty($old_input['password']) && !empty($old_input['confirm_password'])) {
+    if ($old_input['password'] !== $old_input['confirm_password']) {
+        $errors[] = 'Пароли не совпадают.';
+    }
 }
 
-// Проверка согласия с условиями
-if (empty($_POST['agree'])) {
-    $errors[] = 'Необходимо согласиться с условиями обработки данных.';
+// 4. Согласие
+if (empty($old_input['agree'])) {
+    $errors[] = 'Необходимо согласиться с условиями.';
 }
 
-// Если есть ошибки — показываем их
+// --- ЛОГИКА ОТОВРАЖЕНИЯ ---
+
 if (!empty($errors)) {
-    ?>
-    <!DOCTYPE html>
-    <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <title>Ошибка регистрации</title>
-        <link rel="stylesheet" href="style.css">
-        <style>
-            .error-box {
-                background: #ffebee;
-                border-left: 4px solid #f44336;
-                padding: 15px;
-                margin: 20px 0;
-                border-radius: 4px;
-            }
-            .error-box ul {
-                margin: 10px 0 0 20px;
-                color: #c62828;
-            }
-            .back-link {
-                display: inline-block;
-                margin-top: 20px;
-                color: #667eea;
-                text-decoration: none;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h2>⚠️ Ошибка регистрации</h2>
-            <div class="error-box">
-                <strong>Исправьте следующие ошибки:</strong>
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?= sanitize($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-            <a href="index.php" class="back-link">← Вернуться к форме</a>
-        </div>
-    </body>
-    </html>
-    <?php
-    exit;
+    // Если есть ошибки, мы НЕ показываем страницу успеха.
+    // Мы передаем ошибки и старые данные в index.php через переменные.
+    // Для этого просто подключаем index.php в конце этого скрипта.
+    
+    $registration_error_message = implode("<br>", $errors);
+    $show_calculator_instead = true; // Флаг, чтобы показать калькулятор вместо формы регистрации
+    
+    // Подключаем index.php, передавая ему контекст ошибок
+    include 'index.php';
+    exit; // Завершаем скрипт после подключения
 }
 
-// Если всё хорошо — "успешная регистрация"
-$name = sanitize($_POST['name']);
-$email = sanitize($_POST['email']);
-$gender = sanitize($_POST['gender'] ?? 'не указан');
-
-// Здесь обычно: сохранение в БД, отправка письма и т.д.
-
+// --- ЕСЛИ ВСЕ ХОРОШО ---
+// Здесь код успешной регистрации (как было раньше)
+$name = sanitize($old_input['name']);
+$email = sanitize($old_input['email']);
+$gender = sanitize($old_input['gender'] ?? 'не указан');
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Успешная регистрация</title>
+    <title>Успех</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .success-box {
-            text-align: center;
-            padding: 30px;
-        }
-        .success-icon {
-            font-size: 60px;
-            color: #4caf50;
-            margin-bottom: 20px;
-        }
-        .user-info {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: left;
-        }
+        .success-box { text-align: center; padding: 30px; }
+        .success-icon { font-size: 60px; color: #4caf50; margin-bottom: 20px; }
+        .back-link { display: inline-block; margin-top: 20px; color: #667eea; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -120,19 +80,9 @@ $gender = sanitize($_POST['gender'] ?? 'не указан');
             <div class="success-icon">✓</div>
             <h2>Регистрация успешна!</h2>
             <p>Здравствуйте, <strong><?= $name ?></strong>!</p>
-            
-            <div class="user-info">
-                <p><strong>Email:</strong> <?= $email ?></p>
-                <p><strong>Пол:</strong> <?= $gender ?></p>
-            </div>
-            
-            <p>Ваши данные успешно сохранены.</p>
+            <p>Email: <?= $email ?></p>
             <a href="index.php" class="back-link">← На главную</a>
         </div>
     </div>
 </body>
 </html>
-<?php
-// Важно: после POST-обработки не остаёмся на action.php,
-// чтобы при обновлении страницы форма не отправилась повторно
-?>
