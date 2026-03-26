@@ -1,121 +1,72 @@
 <?php
+// ЛАБОРАТОРНАЯ РАБОТА 11
+
+// ЧАСТЬ 1
+
+// 1. Создание и запись в файл
 $file = fopen("test.txt", "w");
 fwrite($file, "Привет, мир!");
 fclose($file);
-echo "Файл test.txt создан и записан.<br>";
+
+// 2. Чтение из файла
+echo "<h3>Чтение из файла:</h3>";
 $file = fopen("test.txt", "r");
 while (!feof($file)) {
     echo fgets($file, 1024) . "<br />";
 }
 fclose($file);
-rename("test.txt", "mir.txt") or die("Ошибка переименования файла");
-echo "Файл переименован в mir.txt<br>";
-// Создаём папку
+
+// 3. Переименование
+rename("test.txt", "mir.txt");
+
+// 4. Создание папки и перемещение файла
 if (!file_exists("folder")) {
     mkdir("folder", 0775, true);
-    echo "Папка 'folder' создана.<br>";
+}
+rename("mir.txt", "folder/mir.txt");
+
+// 5. Копирование файла
+copy("folder/mir.txt", "folder/world.txt");
+
+// 6. Размер файла в разных единицах
+$size = filesize("folder/world.txt");
+echo "<h3>Размер world.txt:</h3>";
+echo "Байты: $size<br>";
+echo "МБ: " . round($size / (1024*1024), 2) . "<br>";
+echo "ГБ: " . round($size / (1024*1024*1024), 2) . "<br>";
+
+// 7. Удаление файла
+unlink("folder/world.txt");
+
+// 8. Проверка существования файлов
+echo "<h3>Проверка файлов:</h3>";
+echo "world.txt: " . (file_exists("folder/world.txt") ? "существует" : "не существует") . "<br>";
+echo "mir.txt: " . (file_exists("folder/mir.txt") ? "существует" : "не существует") . "<br>";
+
+// ЧАСТЬ 2
+
+// 1. Создание папки
+mkdir("test", 0775, true);
+
+// 2. Переименование папки
+rename("test", "www");
+
+// 3. Удаление папки (если пуста)
+if (count(scandir("www")) == 2) {
+    rmdir("www");
 }
 
-// Перемещаем файл
-rename("mir.txt", "folder/mir.txt") or die("Ошибка перемещения файла");
-echo "Файл mir.txt перемещён в папку folder/<br>";
-$file = "folder/mir.txt";
-$newfile = "folder/world.txt";
-
-if (!copy($file, $newfile)) {
-    echo "Не удалось скопировать $file...<br>";
-} else {
-    echo "Содержимое mir.txt скопировано в файл world.txt<br>";
-}
-$file = "folder/world.txt";
-
-if (file_exists($file)) {
-    $size_bytes = filesize($file);
-    $size_kb = round($size_bytes / 1024, 2);
-    $size_mb = round($size_bytes / (1024 * 1024), 2);
-    $size_gb = round($size_bytes / (1024 * 1024 * 1024), 2);
-    
-    echo "Размер файла world.txt:<br>";
-    echo "• В байтах: $size_bytes байт<br>";
-    echo "• В килобайтах: $size_kb КБ<br>";
-    echo "• В мегабайтах: $size_mb МБ<br>";
-    echo "• В гигабайтах: $size_gb ГБ<br>";
-} else {
-    echo "Файл не найден.<br>";
-}
-$file = "folder/world.txt";
-
-if (file_exists($file)) {
-    unlink($file);
-    echo "Файл world.txt удалён.<br>";
-} else {
-    echo "Файл не найден.<br>";
-}
-$files = ["folder/world.txt", "folder/mir.txt"];
-
-foreach ($files as $filename) {
-    if (file_exists($filename)) {
-        echo "Файл $filename существует.<br>";
-    } else {
-        echo "Файл $filename НЕ существует.<br>";
-    }
+// 4. Создание папок из массива
+$dirs = ["docs", "img", "js"];
+mkdir("test", 0775, true);
+foreach ($dirs as $d) {
+    mkdir("test/$d", 0775, true);
 }
 
-
-$dir = "test";
-if (!file_exists($dir)) {
-    if (mkdir($dir, 0775, true)) {
-        echo "Папка '$dir' создана успешно.<br>";
-    } else {
-        echo "ERROR: Не удалось создать папку.<br>";
-    }
-} else {
-    echo "ERROR: Папка уже существует.<br>";
-}
-if (rename("test", "www")) {
-    echo "Папка 'test' переименована в 'www'.<br>";
-} else {
-    echo "Ошибка переименования папки.<br>";
-}
-// Папка должна быть пустой для удаления
-if (is_dir("www") && count(scandir("www")) == 2) { // . и ..
-    if (rmdir("www")) {
-        echo "Папка 'www' удалена.<br>";
-    } else {
-        echo "Ошибка удаления папки.<br>";
-    }
-} else {
-    echo "Папка не пуста или не существует.<br>";
-}
-$folders = ["documents", "images", "scripts", "styles"];
-$baseDir = "test";
-
-// Создаём базовую папку, если нет
-if (!file_exists($baseDir)) {
-    mkdir($baseDir, 0775, true);
+// 5. Поиск JPG-файлов
+echo "<h3>JPG-файлы:</h3>";
+foreach (glob("*.jpg") as $jpg) {
+    echo basename($jpg) . " (" . filesize($jpg) . " байт)<br>";
 }
 
-// Создаём подпапки
-foreach ($folders as $folder) {
-    $path = $baseDir . "/" . $folder;
-    if (!file_exists($path)) {
-        if (mkdir($path, 0775)) {
-            echo "Папка '$path' создана.<br>";
-        } else {
-            echo "Ошибка создания папки '$path'.<br>";
-        }
-    }
-}
-// Поиск файлов с расширением .jpg
-$jpg_files = glob("*.jpg");
-
-if (count($jpg_files) > 0) {
-    echo "Найдены JPG-файлы:<br>";
-    foreach ($jpg_files as $file) {
-        echo basename($file) . " (размер: " . filesize($file) . " байт)<br>";
-    }
-} else {
-    echo "JPG-файлы не найдены.<br>";
-}
 ?>
-
