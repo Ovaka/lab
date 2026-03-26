@@ -98,3 +98,23 @@ $week = [
             <label>Дата 2 (ГГГГ-ММ-ДД): <input type="date" name="date2" required></label><br><br>
             <input type="submit" value="Сравнить">
         </form>
+ <?php
+        $inputDate = '2025-12-31';
+        $timestamp = strtotime($inputDate);
+        $outputDate = date('d-m-Y', $timestamp);
+        echo "<p>Исходная: $inputDate <br> Результат: $outputDate</p>";
+$dateStr = '2000.02.03';
+        // date_create требует формат год-месяц-день (через дефис), заменяем точки
+        $normalizedDate = str_replace('.', '-', $dateStr);
+        
+        $date = date_create($normalizedDate);
+        echo "<p>Исходная дата: " . date_format($date, 'd.m.Y') . "</p>";
+        
+        // Прибавляем: 2 дня + 1 месяц + 3 дня + 1 год = 1 год, 1 месяц, 5 дней
+        date_modify($date, '+1 year +1 month +5 days');
+        echo "<p>После добавления (1 год, 1 месяц, 5 дней): " . date_format($date, 'd.m.Y') . "</p>";
+        
+        // Отнимаем 3 дня
+        date_modify($date, '-3 days');
+        echo "<p>После вычитания 3 дней: " . date_format($date, 'd.m.Y') . "</p>";        
+?>
