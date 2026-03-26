@@ -38,5 +38,10 @@ try {
 } catch (Exception $ex) {
     echo '<br>Исключение: ' . $ex->getMessage();
 }
-echo mktime(10, 25, 0, 3, 15, 2025);
+$p = mktime(10, 25, 0, 3, 15, 2025);
+echo "<br> $p";
+$past = mktime(8, 5, 59, 10, 2, 1990);
+$now = time();
+$difference = $now - $past;
+echo "<br>Разница в секундах: $difference";
 ?>
