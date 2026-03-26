@@ -60,4 +60,16 @@ foreach ($files as $filename) {
         echo "Файл $filename НЕ существует.<br>";
     }
 }
+
+
+$dir = "test";
+if (!file_exists($dir)) {
+    if (mkdir($dir, 0775, true)) {
+        echo "Папка '$dir' создана успешно.<br>";
+    } else {
+        echo "ERROR: Не удалось создать папку.<br>";
+    }
+} else {
+    echo "ERROR: Папка уже существует.<br>";
+}
 ?>
