@@ -117,4 +117,13 @@ $dateStr = '2000.02.03';
         // Отнимаем 3 дня
         date_modify($date, '-3 days');
         echo "<p>После вычитания 3 дней: " . date_format($date, 'd.m.Y') . "</p>";        
+$now = time();
+        $currentYear = date('Y', $now);
+        // 1 января следующего года
+        $newYear = mktime(0, 0, 0, 1, 1, $currentYear + 1);
+        
+        $secondsLeft = $newYear - $now;
+        $daysLeft = floor($secondsLeft / (60 * 60 * 24));
+        
+        echo "<p>До Нового Года осталось дней: $daysLeft</p>";
 ?>
