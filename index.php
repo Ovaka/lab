@@ -43,5 +43,6 @@ echo "<br> $p";
 $past = mktime(8, 5, 59, 10, 2, 1990);
 $now = time();
 $difference = $now - $past;
-echo "<br>Разница в секундах: $difference";
+echo "<br>Разница в секундах: $difference<br>";
+echo date('Y.m.d H:i:s');
 ?>
