@@ -106,5 +106,16 @@ foreach ($folders as $folder) {
         }
     }
 }
+// Поиск файлов с расширением .jpg
+$jpg_files = glob("*.jpg");
+
+if (count($jpg_files) > 0) {
+    echo "Найдены JPG-файлы:<br>";
+    foreach ($jpg_files as $file) {
+        echo basename($file) . " (размер: " . filesize($file) . " байт)<br>";
+    }
+} else {
+    echo "JPG-файлы не найдены.<br>";
+}
 ?>
 
