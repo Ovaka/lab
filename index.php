@@ -70,4 +70,31 @@ $week = [
         $birthday = date('w', mktime(0, 0, 0, 6, 12, 2016));
         echo "<p>Сегодня: " . $week[$today] . "</p>";
         echo "<p>12.06.2016 был: " . $week[$birthday] . "</p>";
+
 ?>
+   <?php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $date1 = $_POST['date1'] ?? '';
+            $date2 = $_POST['date2'] ?? '';
+            
+            if (!empty($date1) && !empty($date2)) {
+                $ts1 = strtotime($date1);
+                $ts2 = strtotime($date2);
+                
+                echo '<p class="success">';
+                if ($ts1 > $ts2) {
+                    echo "Более поздняя дата: $date1";
+                } elseif ($ts2 > $ts1) {
+                    echo "Более поздняя дата: $date2";
+                } else {
+                    echo "Даты равны";
+                }
+                echo '</p>';
+            }
+        }
+        ?>
+        <form method="POST">
+            <label>Дата 1 (ГГГГ-ММ-ДД): <input type="date" name="date1" required></label><br><br>
+            <label>Дата 2 (ГГГГ-ММ-ДД): <input type="date" name="date2" required></label><br><br>
+            <input type="submit" value="Сравнить">
+        </form>
