@@ -77,7 +77,6 @@ if (rename("test", "www")) {
 } else {
     echo "Ошибка переименования папки.<br>";
 }
-<?php
 // Папка должна быть пустой для удаления
 if (is_dir("www") && count(scandir("www")) == 2) { // . и ..
     if (rmdir("www")) {
@@ -88,5 +87,24 @@ if (is_dir("www") && count(scandir("www")) == 2) { // . и ..
 } else {
     echo "Папка не пуста или не существует.<br>";
 }
+$folders = ["documents", "images", "scripts", "styles"];
+$baseDir = "test";
+
+// Создаём базовую папку, если нет
+if (!file_exists($baseDir)) {
+    mkdir($baseDir, 0775, true);
+}
+
+// Создаём подпапки
+foreach ($folders as $folder) {
+    $path = $baseDir . "/" . $folder;
+    if (!file_exists($path)) {
+        if (mkdir($path, 0775)) {
+            echo "Папка '$path' создана.<br>";
+        } else {
+            echo "Ошибка создания папки '$path'.<br>";
+        }
+    }
+}
 ?>
-?>
+
