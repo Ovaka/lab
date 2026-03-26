@@ -72,4 +72,9 @@ if (!file_exists($dir)) {
 } else {
     echo "ERROR: Папка уже существует.<br>";
 }
+if (rename("test", "www")) {
+    echo "Папка 'test' переименована в 'www'.<br>";
+} else {
+    echo "Ошибка переименования папки.<br>";
+}
 ?>
