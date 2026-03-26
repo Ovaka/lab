@@ -26,5 +26,21 @@ if (!copy($file, $newfile)) {
     echo "Не удалось скопировать $file...<br>";
 } else {
     echo "Содержимое mir.txt скопировано в файл world.txt<br>";
+$file = "folder/world.txt";
+
+if (file_exists($file)) {
+    $size_bytes = filesize($file);
+    $size_kb = round($size_bytes / 1024, 2);
+    $size_mb = round($size_bytes / (1024 * 1024), 2);
+    $size_gb = round($size_bytes / (1024 * 1024 * 1024), 2);
+    
+    echo "Размер файла world.txt:<br>";
+    echo "• В байтах: $size_bytes байт<br>";
+    echo "• В килобайтах: $size_kb КБ<br>";
+    echo "• В мегабайтах: $size_mb МБ<br>";
+    echo "• В гигабайтах: $size_gb ГБ<br>";
+} else {
+    echo "Файл не найден.<br>";
+}
 }
 ?>
