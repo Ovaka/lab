@@ -26,6 +26,7 @@ if (!copy($file, $newfile)) {
     echo "Не удалось скопировать $file...<br>";
 } else {
     echo "Содержимое mir.txt скопировано в файл world.txt<br>";
+}
 $file = "folder/world.txt";
 
 if (file_exists($file)) {
@@ -42,5 +43,12 @@ if (file_exists($file)) {
 } else {
     echo "Файл не найден.<br>";
 }
+$file = "folder/world.txt";
+
+if (file_exists($file)) {
+    unlink($file);
+    echo "Файл world.txt удалён.<br>";
+} else {
+    echo "Файл не найден.<br>";
 }
 ?>
