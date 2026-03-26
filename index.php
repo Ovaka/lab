@@ -19,4 +19,12 @@ if (!file_exists("folder")) {
 // Перемещаем файл
 rename("mir.txt", "folder/mir.txt") or die("Ошибка перемещения файла");
 echo "Файл mir.txt перемещён в папку folder/<br>";
+$file = "folder/mir.txt";
+$newfile = "folder/world.txt";
+
+if (!copy($file, $newfile)) {
+    echo "Не удалось скопировать $file...<br>";
+} else {
+    echo "Содержимое mir.txt скопировано в файл world.txt<br>";
+}
 ?>
