@@ -27,4 +27,15 @@ try {
     file_put_contents('log.txt', $message, FILE_APPEND);
     echo '<br>Исключение: ' . $ex->getMessage();
 }
+$countries = ['Spain' => 'Madrid', 'Russia' => 'Moscow'];
+$searchKey = 'Germany';
+
+try {
+    if (!array_key_exists($searchKey, $countries)) {
+        throw new Exception("Ключ '$searchKey' не найден в массиве");
+    }
+    echo "Столица: " . $countries[$searchKey];
+} catch (Exception $ex) {
+    echo '<br>Исключение: ' . $ex->getMessage();
+}
 ?>
