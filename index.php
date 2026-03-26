@@ -51,4 +51,13 @@ if (file_exists($file)) {
 } else {
     echo "Файл не найден.<br>";
 }
+$files = ["folder/world.txt", "folder/mir.txt"];
+
+foreach ($files as $filename) {
+    if (file_exists($filename)) {
+        echo "Файл $filename существует.<br>";
+    } else {
+        echo "Файл $filename НЕ существует.<br>";
+    }
+}
 ?>
