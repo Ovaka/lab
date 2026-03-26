@@ -46,4 +46,15 @@ $difference = $now - $past;
 echo "<br>Разница в секундах: $difference";
 echo "<p>" . date('Y.m.d H:i:s') . "</p>";
 echo "<p>" . date('Y.m.d', mktime(0, 0, 0, 9, 1)) . "</p>";
+$daysOfWeek = [
+            0 => 'Воскресенье',
+            1 => 'Понедельник',
+            2 => 'Вторник',
+            3 => 'Среда',
+            4 => 'Четверг',
+            5 => 'Пятница',
+            6 => 'Суббота'
+        ];
+        $dayNum = date('w', mktime(0, 0, 0, 2, 2, 2000));
+        echo "<p>2 февраля 2000 года был: " . $daysOfWeek[$dayNum] . "</p>";
 ?>
