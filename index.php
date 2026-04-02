@@ -1,129 +1,70 @@
 <?php
-$filename = 'nonexistent_file.txt';
 
-try {
-    // Подавляем стандартное предупреждение fopen с помощью @
-    $handle = @fopen($filename, 'r');
-    
-    if ($handle === false) {
-        throw new Exception("Не удалось открыть файл: $filename");
+class работник
+{
+    // Свойства класса
+    public $name;
+    public $age;
+    public $salary;
+
+    // 3. Метод getName()
+    public function getName()
+    {
+        return $this->name;
     }
-    
-    fclose($handle);
-} catch (Exception $ex) {
-    echo 'Исключение: ' . $ex->getMessage();
-}
-$a = 100;
-$b = 0;
 
-try {
-    if ($b == 0) {
-        throw new Exception("Ошибка: деление на ноль!");
+    // 4. Метод getAge()
+    public function getAge()
+    {
+        return $this->age;
     }
-    $result = $a / $b;
-    echo "Результат: $result";
-} catch (Exception $ex) {
-    $message = date('Y-m-d H:i:s') . " - " . $ex->getMessage() . "\n";
-    file_put_contents('log.txt', $message, FILE_APPEND);
-    echo '<br>Исключение: ' . $ex->getMessage();
-}
-$countries = ['Spain' => 'Madrid', 'Russia' => 'Moscow'];
-$searchKey = 'Germany';
 
-try {
-    if (!array_key_exists($searchKey, $countries)) {
-        throw new Exception("Ключ '$searchKey' не найден в массиве");
+    // 5. Метод getSalary()
+    public function getSalary()
+    {
+        return $this->salary;
     }
-    echo "Столица: " . $countries[$searchKey];
-} catch (Exception $ex) {
-    echo '<br>Исключение: ' . $ex->getMessage();
-}
-$p = mktime(10, 25, 0, 3, 15, 2025);
-echo "<br> $p";
-$past = mktime(8, 5, 59, 10, 2, 1990);
-$now = time();
-$difference = $now - $past;
-echo "<br>Разница в секундах: $difference";
-echo "<p>" . date('Y.m.d H:i:s') . "</p>";
-echo "<p>" . date('Y.m.d', mktime(0, 0, 0, 9, 1)) . "</p>";
-$daysOfWeek = [
-            0 => 'Воскресенье',
-            1 => 'Понедельник',
-            2 => 'Вторник',
-            3 => 'Среда',
-            4 => 'Четверг',
-            5 => 'Пятница',
-            6 => 'Суббота'
-        ];
-        $dayNum = date('w', mktime(0, 0, 0, 2, 2, 2000));
-        echo "<p>2 февраля 2000 года был: " . $daysOfWeek[$dayNum] . "</p>";
-$week = [
-            0 => 'Воскресенье',
-            1 => 'Понедельник',
-            2 => 'Вторник',
-            3 => 'Среда',
-            4 => 'Четверг',
-            5 => 'Пятница',
-            6 => 'Суббота'
-        ];
-        $today = date('w');
-        $birthday = date('w', mktime(0, 0, 0, 6, 12, 2016));
-        echo "<p>Сегодня: " . $week[$today] . "</p>";
-        echo "<p>12.06.2016 был: " . $week[$birthday] . "</p>";
 
-?>
-   <?php
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $date1 = $_POST['date1'] ?? '';
-            $date2 = $_POST['date2'] ?? '';
-            
-            if (!empty($date1) && !empty($date2)) {
-                $ts1 = strtotime($date1);
-                $ts2 = strtotime($date2);
-                
-                echo '<p class="success">';
-                if ($ts1 > $ts2) {
-                    echo "Более поздняя дата: $date1";
-                } elseif ($ts2 > $ts1) {
-                    echo "Более поздняя дата: $date2";
-                } else {
-                    echo "Даты равны";
-                }
-                echo '</p>';
-            }
+    // 6. Статический метод для суммы зарплат
+    public static function getTotalSalary($workers)
+    {
+        $sum = 0;
+        foreach ($workers as $worker) {
+            $sum += $worker->getSalary();
         }
-        ?>
-        <form method="POST">
-            <label>Дата 1 (ГГГГ-ММ-ДД): <input type="date" name="date1" required></label><br><br>
-            <label>Дата 2 (ГГГГ-ММ-ДД): <input type="date" name="date2" required></label><br><br>
-            <input type="submit" value="Сравнить">
-        </form>
- <?php
-        $inputDate = '2025-12-31';
-        $timestamp = strtotime($inputDate);
-        $outputDate = date('d-m-Y', $timestamp);
-        echo "<p>Исходная: $inputDate <br> Результат: $outputDate</p>";
-$dateStr = '2000.02.03';
-        // date_create требует формат год-месяц-день (через дефис), заменяем точки
-        $normalizedDate = str_replace('.', '-', $dateStr);
-        
-        $date = date_create($normalizedDate);
-        echo "<p>Исходная дата: " . date_format($date, 'd.m.Y') . "</p>";
-        
-        // Прибавляем: 2 дня + 1 месяц + 3 дня + 1 год = 1 год, 1 месяц, 5 дней
-        date_modify($date, '+1 year +1 month +5 days');
-        echo "<p>После добавления (1 год, 1 месяц, 5 дней): " . date_format($date, 'd.m.Y') . "</p>";
-        
-        // Отнимаем 3 дня
-        date_modify($date, '-3 days');
-        echo "<p>После вычитания 3 дней: " . date_format($date, 'd.m.Y') . "</p>";        
-$now = time();
-        $currentYear = date('Y', $now);
-        // 1 января следующего года
-        $newYear = mktime(0, 0, 0, 1, 1, $currentYear + 1);
-        
-        $secondsLeft = $newYear - $now;
-        $daysLeft = floor($secondsLeft / (60 * 60 * 24));
-        
-        echo "<p>До Нового Года осталось дней: $daysLeft</p>";
+        return $sum;
+    }
+
+    // Статический метод для суммы возрастов
+    public static function getTotalAge($workers)
+    {
+        $sum = 0;
+        foreach ($workers as $worker) {
+            $sum += $worker->getAge();
+        }
+        return $sum;
+    }
+}
+
+// 1. Создание 2 объектов класса работник
+$worker1 = new работник();
+$worker1->name = "Иван Петров";
+$worker1->age = 25;
+$worker1->salary = 50000;
+
+$worker2 = new работник();
+$worker2->name = "Мария Сидорова";
+$worker2->age = 30;
+$worker2->salary = 65000;
+
+// 2. Вывод суммы зарплат и суммы возрастов
+$workers = [$worker1, $worker2];
+echo "Сумма зарплат: " . работник::getTotalSalary($workers) . " руб.\n";
+echo "Сумма возрастов: " . работник::getTotalAge($workers) . " лет\n";
+
+// 5. Вывод работы методов getName, getAge, getSalary
+echo "\nИнформация о работниках:\n";
+echo "Работник 1: " . $worker1->getName() . ", Возраст: " . $worker1->getAge() . ", Зарплата: " . $worker1->getSalary() . " руб.\n";
+echo "Работник 2: " . $worker2->getName() . ", Возраст: " . $worker2->getAge() . ", Зарплата: " . $worker2->getSalary() . " руб.\n";
+
 ?>
