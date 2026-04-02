@@ -3,8 +3,16 @@
 class работник
 {
     public $name;
-    private $age;  // 7. Свойство age делаем скрытым (private)
+    private $age;
     public $salary;
+
+    // Конструктор для удобства
+    public function __construct($name, $age, $salary)
+    {
+        $this->name = $name;
+        $this->age = $age;
+        $this->salary = $salary;
+    }
 
     public function getName()
     {
@@ -21,26 +29,58 @@ class работник
         return $this->salary;
     }
 
-    // 7-8. Метод setAge с проверкой возраста
-    public function setAge($newAge)
+    // 10. Приватный метод checkAge
+    private function checkAge($newAge)
     {
         if ($newAge >= 18) {
             $this->age = $newAge;
-            echo "Возраст успешно изменён на $newAge лет.\n";
+            return true;
         } else {
             echo "Вам работать в нашей компании еще рано.\n";
+            return false;
         }
+    }
+
+    // 10. Публичный метод setAge, использующий checkAge
+    public function setAge($newAge)
+    {
+        return $this->checkAge($newAge);
+    }
+
+    // 9. Публичный метод checkAge для внешней проверки (отдельный метод)
+    public function isAdult()
+    {
+        return $this->age >= 18;
     }
 }
 
-// Тестирование setAge
-$worker = new работник();
-$worker->name = "Алексей";
-$worker->salary = 45000;
+// Тестирование
+echo "\nТестирование финальной версии класса \n";
 
-echo "\nТест setAge:\n";
-$worker->setAge(17);  // Должно вывести сообщение о раннем возрасте
-$worker->setAge(20);  // Должно успешно изменить возраст
-echo "Текущий возраст: " . $worker->getAge() . " лет\n";
+$worker1 = new работник("Дмитрий", 22, 55000);
+$worker2 = new работник("Ольга", 17, 40000);
+
+// 9. Проверка метода isAdult (checkAge для внешнего использования)
+echo "\nПроверка совершеннолетия:\n";
+echo $worker1->getName() . ": " . ($worker1->isAdult() ? "Совершеннолетний ✓" : "Несовершеннолетний ✗") . "\n";
+echo $worker2->getName() . ": " . ($worker2->isAdult() ? "Совершеннолетний ✓" : "Несовершеннолетний ✗") . "\n";
+
+// 10. Тест setAge с приватной проверкой
+echo "\nТест setAge с проверкой:\n";
+echo "Попытка установить возраст 16 для " . $worker2->getName() . ":\n";
+$worker2->setAge(16);
+
+echo "Попытка установить возраст 19 для " . $worker2->getName() . ":\n";
+$worker2->setAge(19);
+echo "Новый возраст: " . $worker2->getAge() . " лет\n";
+
+// Подсчёт сумм
+$workers = [$worker1, $worker2];
+$totalSalary = array_sum(array_map(fn($w) => $w->getSalary(), $workers));
+$totalAge = array_sum(array_map(fn($w) => $w->getAge(), $workers));
+
+echo "\nИтоговая информация:\n";
+echo "Сумма зарплат: $totalSalary руб.\n";
+echo "Сумма возрастов: $totalAge лет\n";
 
 ?>
