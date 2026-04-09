@@ -1,48 +1,57 @@
 <?php
-// Подключение классов
-require_once 'classes/Page.php';
-require_once 'classes/BlogPage.php';
+// Автозагрузка классов
+spl_autoload_register(function ($class) {
+    $file = __DIR__ . '/classes/' . $class . '.php';
+    if (file_exists($file)) {
+        require_once $file;
+    }
+});
 
+// Санитизация входного параметра
+function getSafePath(): string
+{
+    $allowed = ['netrunner', 'solo'];
+    $input = $_GET['path'] ?? '';
+    return in_array($input, $allowed, true) ? $input : '';
+}
+
+$currentPath = getSafePath();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>CyberPunk 2077 • Lab 14</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberPunk 2077 • Выбор Пути</title>
     <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
-    <h1> CYBERPUNK 2077 • LAB 14</h1>
+<body class="<?= $currentPath ? $currentPath . '-active' : 'home' ?>">
     
-    <!-- Навигация с GET-параметрами -->
-    <nav>
-        <a href="?page=page"> Главная</a>
-        <a href="?page=blog"> Блог</a>
-        <a href="?"> О проекте</a>
-    </nav>
+    <header class="main-header">
+        <h1> CYBERPUNK 2077</h1>
+        <p class="tagline">Лабораторная работа №14 • Метод GET • ООП в PHP</p>
+    </header>
 
-    <hr style="border-color: #00f3ff;">
+    <main class="content">
+        <?php
+        // Фабрика страниц на основе $_GET['path']
+        if ($currentPath === 'netrunner') {
+            $page = new NetrunnerPage();
+        } elseif ($currentPath === 'solo') {
+            $page = new SoloPage();
+        } else {
+            $page = new Page();
+        }
+        
+        $page->render();
+        ?>
+    </main>
 
-    <?php
-    /**
-     * Маршрутизация на основе $_GET['page']
-     * С проверкой существования параметра через isset()
-     */
-    $currentPageName = isset($_GET['page']) ? $_GET['page'] : 'page';
-
-    // Фабрика страниц
-    if ($currentPageName === 'blog') {
-        $currentPage = new BlogPage();
-    } else {
-        $currentPage = new Page();
-    }
-
-    // Рендеринг выбранной страницы
-    $currentPage->render();
-    ?>
-
-    <footer style="margin-top: 30px; font-size: 0.9em; opacity: 0.7;">
-        <p>Lab 14: GET-запросы • Модификаторы доступа • Типизация в PHP</p>
+    <footer>
+        <p>🔐 <code>$_GET['path'] = "<?= htmlspecialchars($currentPath ?: 'empty') ?>"</code> • 
+           Класс: <code><?= get_class($page) ?></code></p>
+        <p style="opacity: 0.6; font-size: 0.9em;">Wake up, Samurai. We have code to write.</p>
     </footer>
+
 </body>
 </html>
