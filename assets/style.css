@@ -1,0 +1,181 @@
+
+:root {
+    --neon-cyan: #00f3ff;
+    --neon-pink: #ff0055;
+    --bg-dark: #0a0a0f;
+    --bg-card: #16213e;
+    --bg-nav: #1a1a2e;
+    --text-main: #e0e0ff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--neon-cyan);
+    font-family: 'Courier New', monospace;
+    line-height: 1.6;
+    padding: 20px;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 243, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.1) 0%, transparent 20%);
+}
+
+h1 {
+    text-align: center;
+    text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-pink);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+nav {
+    background: var(--bg-nav);
+    padding: 15px 20px;
+    border: 2px solid var(--neon-pink);
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+}
+
+nav a {
+    color: var(--neon-cyan);
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+nav a:hover {
+    color: var(--neon-pink);
+    text-shadow: 0 0 10px var(--neon-pink);
+    background: rgba(255, 0, 85, 0.1);
+}
+
+nav a:hover::before {
+    left: 100%;
+}
+
+.cyberpunk-blog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.card {
+    background: var(--bg-card);
+    border-left: 4px solid var(--neon-cyan);
+    padding: 20px;
+    border-radius: 0 8px 8px 0;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+    opacity: 0;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+}
+
+.card:hover::after {
+    opacity: 1;
+    animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+    0% { top: -50%; }
+    100% { top: 150%; }
+}
+
+.card h3 {
+    color: var(--neon-pink);
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px var(--neon-pink);
+}
+
+.card p {
+    color: var(--text-main);
+    margin-bottom: 15px;
+    font-size: 0.95em;
+}
+
+.tag {
+    display: inline-block;
+    background: var(--neon-pink);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.default-page {
+    font-size: 1.3em;
+    padding: 30px;
+    border: 2px dashed var(--neon-cyan);
+    text-align: center;
+    background: rgba(22, 33, 62, 0.5);
+    border-radius: 10px;
+    animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 10px var(--neon-cyan); }
+    50% { box-shadow: 0 0 25px var(--neon-cyan), 0 0 50px var(--neon-pink); }
+}
+
+footer {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.9em;
+    opacity: 0.8;
+    padding: 15px;
+    border-top: 1px solid var(--neon-cyan);
+}
+
+@media (max-width: 600px) {
+    nav {
+        text-align: center;
+    }
+    nav a {
+        display: block;
+        margin: 10px 0;
+    }
+    .cyberpunk-blog {
+        grid-template-columns: 1fr;
+    }
+}
